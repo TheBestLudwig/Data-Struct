@@ -1,4 +1,4 @@
-package 链表.环形链表;
+package 链表.c环形链表;
 
 public class SCLinkedList {
     public static void main(String[] args) {
@@ -9,14 +9,14 @@ public class SCLinkedList {
         SCNode node5 = new SCNode(5, "杨志", "青面兽");
 
         SCHList l = new SCHList();
-        l.addToTail(node1);
-        l.addToTail(node2);
-        l.addToTail(node3);
-        l.addToTail(node4);
-        l.addToTail(node5);
-
+        l.add(node1);
+        l.add(node2);
+        l.add(node3);
+        l.add(node4);
+        l.add(node5);
+        System.out.println(l.Size());
         l.showList();
-        System.out.println(l.getHead().next);
+        System.out.println(l.getHead());
 
     }
 }
@@ -31,7 +31,7 @@ class SCNode {
         this.no = no;
         this.name = name;
         this.nickName = nickName;
-        this.next = this;
+        this.next = null;
     }
 
 
@@ -43,7 +43,7 @@ class SCNode {
 }
 
 class SCHList {
-    private SCNode head = new SCNode(-1, "", "");
+    private SCNode head = null;
 
 
     public SCNode getHead() {
@@ -55,38 +55,20 @@ class SCHList {
     }
 
     //add方法
-    public void addFromHead(SCNode node) {//头插
-        if (node == null) return;
-        SCNode cur = head.next;
-        while (cur.next != head.next) {//cur.next存在么？
-            cur = cur.next;
-        }
-        node.next = head.next;
-        cur.next = node;
-    }
 
-    public void addToTail(SCNode node) {//尾插
+    public void add(SCNode node) {//尾插
         if (node == null) return;
         if (Size()==0) {
-            head.next = node;
-            node.next = head.next;
-        } else if(Size()==1){
-            head.next.next = node;
-            node.next = head.next;
-        }else{
+            head= node;
+            node.next = head;
+        } else{
             SCNode cur = head.next;
-                while (cur != head.next) {
+                while (cur.next !=head) {
                     cur = cur.next;
             }
             cur.next = node;
-            node.next = head.next;
+            node.next = head;
         }
-
-
-    }
-
-    public void addByOrder(SCNode node) {//有序插
-        if (node == null) return;
     }
 
     public void showList() {
@@ -94,27 +76,31 @@ class SCHList {
             System.out.println("链表为空...");
             return;
         }
-        SCNode cur = head.next;
-        System.out.print("{");
-        if (Size()==0) System.out.println("null}");
-        else if (Size()==1) System.out.println(head.next+"head.next");
-        else{
-            while (cur.next != head.next) {
+        SCNode cur = head;
+        if (Size()==0){
+            System.out.println("null");
+            return;
+        }else if (Size()==1){
+            System.out.print("{"+cur+"->");
+        }else {
+            System.out.print("{");
+            while (cur.next !=head) {
                 System.out.print(cur + "->");
                 cur = cur.next;
             }
-            System.out.println("head.next}");
+            System.out.print(cur + "->");
         }
 
-
+        System.out.println("head}");
     }
 
     public int Size() {
-        int n = 0;
-        if (head.next == null) return n;
 
+        if (head == null) return 0;
+        int n = 2;
         SCNode cur = head.next;
-        while (cur.next != head.next) {
+        if (cur.next == head)return 1;
+        while (cur.next != head) {
             cur = cur.next;
             n++;
 

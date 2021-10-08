@@ -1,4 +1,4 @@
-package 链表.双向链表;
+package 链表.b双向链表;
 
 public class DoubleLinkedList {
     public static void main(String[] args) {
