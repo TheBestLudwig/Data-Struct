@@ -1,5 +1,7 @@
 package 链表.c环形链表;
 
+import com.sun.org.apache.bcel.internal.generic.RET;
+
 public class SCLinkedList {
     public static void main(String[] args) {
         SCNode node1 = new SCNode(1, "宋江", "及时雨");
@@ -16,7 +18,9 @@ public class SCLinkedList {
         l.add(node5);
         System.out.println(l.Size());
         l.showList();
-        System.out.println(l.getHead());
+        System.out.println(l.get(1));
+        l.remove(6);
+        l.showList();
 
     }
 }
@@ -70,6 +74,44 @@ class SCHList {
             node.next = head;
         }
     }
+    public SCNode get(int num){
+        if (num <=0)return null;
+        if (num == 1)return head;
+        SCNode cur = head;
+        while (cur.no !=num &&cur.next !=head){
+            cur = cur.next;
+        }
+        if (cur.next ==head) {
+            System.out.println("没有找到编号为"+num+"的节点");
+            return null;
+        }
+        return cur;
+    }
+    public void remove(int num){
+        if (isEmpty()) return;
+        if (num <=0)return;
+        if (Size() ==1)head = null;
+        if (num ==1){
+            SCNode cur = head;
+            while (cur.next != head){
+                cur = cur.next;
+            }
+            head = head.next;
+            cur.next = head;
+
+        }else{
+            SCNode cur = head;
+            while (cur.next != head){
+                if (cur.next.no == num){
+                    cur.next = cur.next.next;
+                    return;
+                }
+                cur = cur.next;
+            }
+            System.out.println("删除失败！");
+        }
+
+    }
 
     public void showList() {
         if (isEmpty()) {
@@ -107,6 +149,5 @@ class SCHList {
         }
         return n;
     }
-
 }
 
