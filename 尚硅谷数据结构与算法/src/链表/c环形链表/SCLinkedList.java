@@ -151,5 +151,9 @@ class SCHList {
         }
         return n;
     }
+
+    public void Josephu(){
+
+    }
 }
 
