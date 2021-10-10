@@ -1,4 +1,4 @@
-package 链表.c环形链表;
+package b链表.c环形链表;
 
 public class Josephu {
     public static void main(String[] args) {

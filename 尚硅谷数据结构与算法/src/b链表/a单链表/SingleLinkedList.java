@@ -1,4 +1,4 @@
-package 链表.a单链表;
+package b链表.a单链表;
 
 
 import java.util.Stack;

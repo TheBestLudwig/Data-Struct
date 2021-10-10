@@ -1,6 +1,4 @@
-package 链表.c环形链表;
-
-import com.sun.org.apache.bcel.internal.generic.RET;
+package b链表.c环形链表;
 
 public class SCLinkedList {
     public static void main(String[] args) {
