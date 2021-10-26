@@ -35,9 +35,11 @@ public class Regexp_ {
         //         （2）正则表达式技术
 
         //1.先创建一个Pattern对象，模式对象，可以理解为一个正则表达式对象
+        //Pattern没有公共的构造方法，只能通过compile来构造Pattern对象
         Pattern pattern = Pattern.compile("[a-zA-Z]+");
         //2.创建一个匹配对象
         //理解：匹配器matcher匹配器按照pattern（模式/样式），到content文本中去匹配，找到就true,否则返回false
+        //Mattcher也没有公共构造方法，只能通过Pattern对象的matcher方法来构造Macher对象
         Matcher matcher = pattern.matcher(content);
         //3.可以开始循环匹配
         while (matcher.find()) {
