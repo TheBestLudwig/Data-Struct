@@ -1,8 +1,5 @@
 package c栈;
 
-import javax.xml.stream.events.Characters;
-import java.util.Scanner;
-
 /**
  * 1.得到算式
  * 2.遍历算式，取出当前字符，如果是数字，则入数字栈，是符号则分情况
@@ -15,27 +12,47 @@ import java.util.Scanner;
 public class CalcDemo {
     public static void main(String[] args) {
         //1.得到算式
-        System.out.print("请输入算式：");
-        Scanner sc = new Scanner(System.in);
-        String s = null;
-        if (sc.hasNext()){
-            s = sc.next();
-            System.out.println(s);
+//        System.out.print("请输入算式：");
+//        Scanner sc = new Scanner(System.in);
+//        String s = null;
+//        if (sc.hasNext()){
+//            s = sc.next();
+//            System.out.println(s);
+//        }
+        String calc = "78+9*6+3*2";
+        String regStr1 = "[\\+\\-\\*\\/]";
+        String regStr2 = "[0-9]+";
+
+        String[] ss1 = calc.split(regStr1);
+        String[] ss2 = calc.split(regStr2);
+
+        ArrayStack2 numStack = new ArrayStack2(10);
+        ArrayStack2 opeStack = new ArrayStack2(10);
+        for (int i = 0; i < ss1.length; i++) {
+            if (ss1[i].isEmpty()) break;
+            numStack.push(Integer.parseInt(ss1[i]));
+            if (ss2[i].isEmpty()) break;
+            opeStack.push(ss2[i]);
+
+
         }
+        while (!numStack.isEmpty()) {
+            System.out.println(numStack.pop());
+        }
+        while (!opeStack.isEmpty()) {
+            System.out.println(opeStack.pop());
+        }
+
+
         //2.遍历算式
-        String num = "";
-        for (int i = 0; i <s.length() ; i++) {
-            if (Character.isDigit(s.charAt(i)))
-                num += s.charAt(i);
-           ////
-        }
+
 
     }
 }
 
-class ArrayStack2{
-    private int maxSize;
-    private int[] stack;
+class ArrayStack2 {
+    private final int maxSize;
+    private final int[] stack;
     private int top = -1;
 
     public ArrayStack2(int maxSize) {
@@ -43,8 +60,8 @@ class ArrayStack2{
         stack = new int[maxSize];
     }
 
-    public boolean isFull(){
-        return top == maxSize-1;
+    public boolean isFull() {
+        return top == maxSize - 1;
     }
     public boolean isEmpty(){
         return top == -1;
