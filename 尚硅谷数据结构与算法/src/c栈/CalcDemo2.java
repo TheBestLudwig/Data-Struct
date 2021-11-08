@@ -14,43 +14,45 @@ public class CalcDemo2 {
 
         String calc = "3+2*6-4";
         int index = 0;
-        char ch = ' ';
+        char ch;
         int oper = 0;
         int num1, num2, num3;
-        ArrayStack3 numStack = new ArrayStack3(10);
-        ArrayStack3 opeStack = new ArrayStack3(10);
+        ArrayStack3 numStack = new ArrayStack3(5);
+        ArrayStack3 opeStack = new ArrayStack3(5);
 
         while (index < calc.length()) {
             //先依次得到calc的每一个字符
             //ch = calc.charAt(index);
             ch = calc.substring(index, index + 1).charAt(0);
-            if (!opeStack.isOper(ch)) {
+            if (opeStack.isOper(ch)) {//是符号
+                if (!opeStack.isEmpty()) {//符号栈不空
+                    if (opeStack.priority(ch) > opeStack.priority(opeStack.peek())) {
+                        opeStack.push(ch);
+                    } else if (opeStack.priority(ch) <= opeStack.priority(opeStack.peek())) {
+                        num1 = numStack.pop();
+                        num2 = numStack.pop();
+                        num3 = numStack.calc(num2, num1, opeStack.pop());
+                        numStack.push(num3);
+                    }
+                } else {//符号栈为空
+                    opeStack.push(ch);
+                }
+            } else {//不是符号
                 int num = Integer.parseInt(ch + "");
                 numStack.push(num);
-            } else {
-                if (opeStack.isEmpty()) {
-                    opeStack.push(ch);
-                } else if (numStack.priority(ch) > numStack.priority(opeStack.peek())) {
-                    opeStack.push(ch);
-                } else if (numStack.priority(ch) <= numStack.priority(opeStack.peek())) {
-                    num1 = numStack.pop();
-                    num2 = numStack.pop();
-                    num3 = numStack.calc(num2, num1, (char) opeStack.peek());
-                    numStack.push(num3);
-                }
             }
             index++;
         }
         //下面的计算又是一个循环
         num1 = numStack.pop();
         num2 = numStack.pop();
-        ch = (char) opeStack.pop();
-        num3 = numStack.calc(num2, num1, ch);
+        oper = opeStack.pop();
+        num3 = numStack.calc(num2, num1, oper);
         numStack.push(num3);
         num1 = numStack.pop();
         num2 = numStack.pop();
-        ch = (char) opeStack.pop();
-        num3 = numStack.calc(num2, num1, ch);
+        oper = opeStack.pop();
+        num3 = numStack.calc(num2, num1, oper);
         numStack.push(num3);
         System.out.println(numStack.peek());
 
@@ -60,6 +62,7 @@ public class CalcDemo2 {
 
 }
 
+//这个栈有问题？
 class ArrayStack3 {
     private final int maxSize;
     private final int[] stack;
@@ -113,13 +116,13 @@ class ArrayStack3 {
     }
 
     //判断扫描到的是不是运算符
-    public boolean isOper(char ch) {
-        return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+    public boolean isOper(int oper) {
+        return oper == '+' || oper == '-' || oper == '*' || oper == '/';
     }
 
-    public int calc(int num1, int num2, char ch) {
+    public int calc(int num1, int num2, int oper) {
         int temp = 0;
-        switch (ch) {
+        switch (oper) {
             case '+':
                 temp = num1 + num2;
                 break;
@@ -128,11 +131,8 @@ class ArrayStack3 {
             case '*':
                 temp = num1 * num2;
             case '/':
-                try {
-                    temp = num1 / num2;
-                } catch (ArithmeticException e) {
-                    System.out.println("除数不能为0");
-                }
+                if (num2 == 0) System.out.println("除数不能为0");
+                temp = num1 / num2;
                 break;
             default:
                 System.out.println("算式有错");
