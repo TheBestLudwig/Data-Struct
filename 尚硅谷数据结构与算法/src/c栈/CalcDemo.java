@@ -19,8 +19,8 @@ public class CalcDemo {
 //            s = sc.next();
 //            System.out.println(s);
 //        }
-        String calc = "78+9*6+3*2";
-        String regStr1 = "[\\+\\-\\*\\/]";
+//        String calc = "78+9*6+3*2";
+ /*       String regStr1 = "[\\+\\-\\*\\/]";
         String regStr2 = "[0-9]+";
 
         String[] ss1 = calc.split(regStr1);
@@ -45,8 +45,27 @@ public class CalcDemo {
 
 
         //2.遍历算式
+*/
+    String calc = "78+9*6+3*2";
+    String s = "";
+        ArrayStack2 numStack = new ArrayStack2(10);
+        ArrayStack2 opeStack = new ArrayStack2(10);
+        for (int i = 0; i <calc.length() ; i++) {
+            if (isDigit(calc.charAt(i))){
+                s += String.valueOf(calc.charAt(i));
+            }
+            numStack.push(Integer.parseInt(s));
+            System.out.println(s);
+            s = "";
+        }
 
+    }
 
+    static boolean isOper(char c){
+        return c == ('+'|'-'|'*'|'/');
+    }
+    static boolean isDigit(char c){
+        return c == ('1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9'|'0');
     }
 }
 
