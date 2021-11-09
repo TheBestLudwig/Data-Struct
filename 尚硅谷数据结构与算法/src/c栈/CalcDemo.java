@@ -23,19 +23,11 @@ public class CalcDemo {
         String regStr1 = "[\\+\\-\\*\\/]";
         String regStr2 = "[0-9]+";
 
-        String[] ss1 = calc.split(regStr1);
-        String[] ss2 = calc.split(regStr2);
+
 
         ArrayStack2 numStack = new ArrayStack2(10);
         ArrayStack2 opeStack = new ArrayStack2(10);
-        for (int i = 0; i < ss1.length; i++) {
-            if (ss1[i].isEmpty()) break;
-            numStack.push(Integer.parseInt(ss1[i]));
-            if (ss2[i].isEmpty()) break;
-            opeStack.push(ss2[i]);
 
-
-        }
         while (!numStack.isEmpty()) {
             System.out.println(numStack.pop());
         }

@@ -12,11 +12,12 @@ package c栈;
 public class CalcDemo2 {
     public static void main(String[] args) {
 
-        String calc = "3+2*6-4";
+        String calc = "30+2*6-4";//如何处理多位数？
         int index = 0;
         char ch;
         int oper = 0;
         int num1, num2, num3;
+        String keepNum = "";
         ArrayStack3 numStack = new ArrayStack3(5);
         ArrayStack3 opeStack = new ArrayStack3(5);
 
@@ -33,29 +34,50 @@ public class CalcDemo2 {
                         num2 = numStack.pop();
                         num3 = numStack.calc(num2, num1, opeStack.pop());
                         numStack.push(num3);
+                        opeStack.push(ch);
                     }
                 } else {//符号栈为空
                     opeStack.push(ch);
                 }
-            } else {//不是符号
-                int num = Integer.parseInt(ch + "");
-                numStack.push(num);
+            } else {//不是符号,是数字
+//                int num = Integer.parseInt(ch + "");
+//                numStack.push(num);
+
+                //numStack.push(ch -48);//如果是多位数，就会出错，按如下方法
+                //1.当处理多位数时，不能发现是一个数就立即处栈
+                //2.在处理数时，需要向calc表达式的后面再看一位，如果是数，就继续
+                //  扫描，如果是符号，才能入栈
+                //3.因此，需要定义一个字符串，来用于字符拼接
+
+                keepNum += ch;
+                //4.判断下一个字符是不是数字，如果是数，则继续扫描，如是符号，则入数栈。
+                //如果ch是最后一位，也是直接入栈
+                if (index == calc.length()-1){
+                    numStack.push(Integer.parseInt(keepNum));
+                }else {
+                    if(opeStack.isOper(calc.substring(index+1,index+2).charAt(0))){
+                        //如果后一位是运算符
+                        numStack.push(Integer.parseInt(keepNum));
+                        keepNum = "";//keepNum用完后要清空，不然会接着拼接
+                    }
+                }
+
             }
             index++;
+            //如果while中没有条件，则在后面判断
+//            if(index >= calc.length()){
+//                break;
+//            }
         }
         //下面的计算又是一个循环
-        num1 = numStack.pop();
-        num2 = numStack.pop();
-        oper = opeStack.pop();
-        num3 = numStack.calc(num2, num1, oper);
-        numStack.push(num3);
-        num1 = numStack.pop();
-        num2 = numStack.pop();
-        oper = opeStack.pop();
-        num3 = numStack.calc(num2, num1, oper);
-        numStack.push(num3);
-        System.out.println(numStack.peek());
-
+        while (!opeStack.isEmpty()){//符号栈为空或数栈中只有一个数字，即为判断条件
+            num1 = numStack.pop();
+            num2 = numStack.pop();
+            oper = opeStack.pop();
+            num3 = numStack.calc(num2, num1, oper);
+            numStack.push(num3);
+        }
+        System.out.println(calc+"="+numStack.peek());
 
     }
 
@@ -67,6 +89,10 @@ class ArrayStack3 {
     private final int maxSize;
     private final int[] stack;
     private int top = -1;
+
+    public int getTop(){
+        return top;
+    }
 
     public ArrayStack3(int maxSize) {
         this.maxSize = maxSize;
@@ -128,8 +154,10 @@ class ArrayStack3 {
                 break;
             case '-':
                 temp = num1 - num2;
+                break;
             case '*':
                 temp = num1 * num2;
+                break;
             case '/':
                 if (num2 == 0) System.out.println("除数不能为0");
                 temp = num1 / num2;

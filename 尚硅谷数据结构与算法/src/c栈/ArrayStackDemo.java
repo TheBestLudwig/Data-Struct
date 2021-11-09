@@ -11,8 +11,9 @@ public class ArrayStackDemo {
         ss.push(5);
        ss.push(6);
         ss.show();
-        ss.pop();
-        ss.show();
+        while (!ss.isEmpty()){
+            System.out.println(ss.pop());
+        }
 
     }
 }
