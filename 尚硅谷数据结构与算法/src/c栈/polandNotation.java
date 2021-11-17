@@ -6,6 +6,7 @@ import java.util.Stack;
 
 public class polandNotation {
     public static void main(String[] args) {
+/*
         //先定义一个逆波兰表达式
         String suffixExp = "3 4 + 5 * 6 - ";
 
@@ -15,7 +16,73 @@ public class polandNotation {
         System.out.println("算式为：" + list);
         int res = calculate(list);
         System.out.println("计算结果为:" + res);
+*/
+        String expression = "1+((2+3)*4)-5";
+        //1.直接对字符串操作不方便，先将表达式转List
+        List<String> infixExpList = toInfixExpList(expression);
+        System.out.println(infixExpList);
+        //2.List转后缀
+        //[1, +, (, (, 2, +, 3, ), *, 4, ), -, 5]==>[1,2,3,+,4,*,5,-]
+        List<String> parseSuffixExpList = parseSuffixExpList(infixExpList);
+        System.out.println(parseSuffixExpList);
 
+        System.out.printf("expression=%d", calculate(parseSuffixExpList));
+    }
+
+    public static List<String> toInfixExpList(String s) {//中缀转List
+        //定义一个List存放中缀表达式对应内容
+        List<String> ls = new ArrayList<String>();
+        int i = 0;//索引
+        String str;//对多位数的拼接
+        char c;//每遍历一个字符，则放入c中
+        do {
+            //如果c是非数字，则需要加入ls里，
+            if ((c = s.charAt(i)) < 48 || (c = s.charAt(i)) > 57) {
+                ls.add("" + c);
+                i++;
+            } else {
+                //如果是数，则要考虑多位数
+                str = "";
+                while (i < s.length() && (c = s.charAt(i)) >= 48 && (c = s.charAt(i)) <= 57) {
+                    str += c;
+                    i++;
+                }
+                ls.add(str);
+            }
+        } while (i < s.length());
+        return ls;
+    }
+
+    public static List<String> parseSuffixExpList(List<String> ls) {
+        //1.定义两个栈
+        Stack<String> s1 = new Stack<String>();//符号栈
+        //因为S2栈在整个过程中没有pop操作，而且还要逆序，麻烦，直接使用List
+        List<String> s2 = new ArrayList<String>();
+        //遍历ls
+        for (String item : ls) {
+            //如果是一个数，就入数栈S2
+            if (item.matches("\\d+")) {
+                s2.add(item);
+            } else if (item.equals("(")) {
+                s1.push(item);
+            } else if (item.equals(")")) {
+                //如果是右括号，则依次弹出S1栈顶的运算符，并压入S2，直到遇到括号为止，此时将这一对括号丢弃
+                while (!s1.peek().equals("(")) {
+                    s2.add(s1.pop());
+                }
+                s1.pop();//将左小括号弹出S1栈
+            } else {
+                //当item优先级小于等于栈顶运算符的优先级，将s1栈顶运算符弹出并加入S2中，再转4.2与s1中新栈顶运算符比较
+                while (s1.size() != 0 && Operation.getValue(s1.peek()) >= Operation.getValue(item)) {
+                    s2.add(s1.pop());
+                }
+                s1.push(item);
+            }
+        }
+        while (s1.size() != 0) {
+            s2.add(s1.pop());
+        }
+        return s2;//因为是存放到List中，可以不用倒序
     }
 
     //将逆波兰式依次放入ArrayList中
@@ -62,3 +129,40 @@ public class polandNotation {
 
 
 }
+
+
+//编写一个类Operation,可以返回一个运算符对应的优先级
+class Operation {
+    private static final int ADD = 1;
+    private static final int SUB = 1;
+    private static final int MUL = 2;
+    private static final int DIV = 2;
+
+    //写一个方法返回优先级对应数字
+    public static int getValue(String operation) {
+        int result = 0;
+        switch (operation) {
+            case "+":
+                result = ADD;
+                break;
+            case "-":
+                result = SUB;
+                break;
+            case "*":
+                result = MUL;
+                break;
+            case "/":
+                result = DIV;
+                break;
+            default:
+                System.out.println("不存在该运算符");
+                break;
+        }
+        return result;
+    }
+
+}
+
+/**
+ *
+ ****/
