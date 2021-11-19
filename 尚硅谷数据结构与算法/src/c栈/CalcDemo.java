@@ -23,20 +23,11 @@ public class CalcDemo {
         String regStr1 = "[\\+\\-\\*\\/]";
         String regStr2 = "[0-9]+";
 
-        String[] ss1 = calc.split(regStr1);
-        String[] ss2 = calc.split(regStr2);
 
-        for (String s:ss2) {
-            System.out.println(s);
-        }
+
         ArrayStack2 numStack = new ArrayStack2(10);
         ArrayStack2 opeStack = new ArrayStack2(10);
-        for (int i = 0; i < ss1.length; i++) {
-            numStack.push(Integer.parseInt(ss1[i]));
-            opeStack.push(ss2[i]);//这里有问题，因为栈内部是用int[]实现的，而操作符是字符，不是数字
 
-
-        }
         while (!numStack.isEmpty()) {
             System.out.println(numStack.pop());
         }
