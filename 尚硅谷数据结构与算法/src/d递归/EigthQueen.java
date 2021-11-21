@@ -4,40 +4,62 @@ package d递归;
 
 public class EigthQueen {
     //定义一个max表示共有多少个皇后
-    public final static int MAX = 8;
-    //定义一个数组arr,保存皇后放置位置的结果，比如arr[0] = {0,4,7,5,2,6,1,3}
-    public static int[][] arr = new int[MAX][MAX];
-
+    static int MAX = 8;
+    static int[][] map = new int[MAX][MAX];
+    static int sum = 0;
     public static void main(String[] args) {
-        init();
-        show();
+        backtrace(0);//回溯算法
+        System.out.println(sum);//输出总共有多少个解
 
     }
 
-    //初始化棋盘
-    public static void init() {
-        for (int i = 0; i < MAX; i++) {
-            for (int j = 0; j < MAX; j++) {
-                arr[i][j] = 0;
+
+    public static void backtrace(int t){
+        if (t == MAX){
+            sum++;
+            for (int i = 0;i<MAX;i++){
+                for (int j = 0;j<MAX;j++){
+                    System.out.print(map[i][j]+" ");
+                }
+                System.out.println();
             }
-        }
-    }
-
-    //写一个方法，将皇后摆放的位置打印出来
-    public static void show() {
-        for (int i = 0; i < MAX; i++) {
-            for (int j = 0; j < MAX; j++) {
-                System.out.print(arr[i][j] + " ");
+            System.out.println("===第"+sum+"种解法===");
+        }else{
+            for (int j = 0;j<MAX;j++){
+                if (check(t,j)){
+                    map[t][j]=1;
+                    backtrace(t+1);
+                    map[t][j]=0;
+                }
             }
-            System.out.println();
-        }
+       }
     }
-
-    //判断当放置第N个皇后时，与前面摆好的皇后是否冲突
-    private boolean judge(int n) {//n表示放置第n个皇后
+    //放置皇后，并检查与前面摆好的皇后是否冲突
+    public static boolean check(int m, int n) {//检查(m,n)处是否能够放皇后
         for (int i = 0; i < n; i++) {
-
+            if (map[m][i] == 1)//检查同行有无皇后
+                return false;
         }
-        return false;
+        for (int i = 0;i< m;i++){
+            if(map[i][n] == 1)//检查同列有无皇后
+                return false;
+        }
+        for (int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){//向左检查有无斜行
+                if (map[i][j]==1 && Math.abs(m-i)==Math.abs(n-j))
+                    return false;
+            }
+        }
+        for (int i = 0;i<m;i++){
+            for(int j = MAX-1;j>n;j--){//向右检查有无斜行
+                if (map[i][j]==1 && Math.abs(m-i)==Math.abs(n-j))
+                    return false;
+            }
+        }
+        return true;
     }
 }
+/**
+ * map[0][0]=1; i=0,j=0处放置一个
+ * map[1][0]=1;
+ **/
